@@ -1,2 +1,149 @@
-#(The instructions and formatting for this code was orginially provided by Cindy Smith as apart of an assigned academic ECS 101 Project)
-#To operate this program Download the library Pandas and import it unto your python IDE, 
+#(The instructions and formatting for this code was orginially provided by Cindy Smith as apart of an assigned academic ECS 101 GROUP Project)
+
+#To operate this program 1) Download the library Pandas and import it unto your python IDE, 2) Download the assoicated Excel File with this GitHub Repository
+# 3) Copy and Paste the listed code into your Python IDE
+# 4) Add the Downloaded Excel file into the folder containing the ".py" file your using the run the program (and if neccesary allow the file to be written to and read in file settings)
+# 5) Make a .txt file containing a text that you would like to convert and add it to the folder containing the ".py" file and NAME the file "Tester.txt"
+# 6) Run the functions "read_and_create()" and "bin_to_txt()" to produce associated text and binary files and operate the program
+
+# Code: 
+
+import pandas as pd
+
+
+
+# task 1
+wb = pd.read_excel('Text to Binary To Text Converter.xlsx', dtype=str)
+char = list(wb["Char"])
+bin = list(wb["Bin"])
+try:
+    i = char.index("\\n")
+    char[i] = "\n"
+except:
+    print("\\n was not found")
+try:
+    j = char.index("<space>")
+    char[j] = " "
+except:
+    print("<space> was not found")
+try:
+    d = char.index("<'>")
+    char[d] = "'"
+except:
+    print('was not found')
+
+# task 2
+# check if the first 5 chars matches then 4, 3
+def returnBinaryValue(p1):
+    # p1 = "Syracuse" <-give binary value of first letter and remove it and then return "Binary Value" of yracuse
+
+    # Get for 5 characters
+    if len(p1) >= 5:
+        s5 = p1[0:5]
+        for i in range(len(char)):
+            if char[i] == s5:
+                p1 = p1[5:]
+                binVal = bin[i]
+                return binVal, p1
+    # get first 4 character
+    if len(p1) >= 4:
+        s4 = p1[0:4]
+        for i in range(len(char)):
+            if char[i] == s4:
+                p1 = p1[4:]
+                binVal = bin[i]
+                return binVal, p1
+
+                # get first 3 character
+    if len(p1) >= 3:
+        s3 = p1[0:3]
+        for i in range(len(char)):
+            if char[i] == s3:
+                p1 = p1[3:]
+                binVal = bin[i]
+                return binVal, p1
+
+    # get first 2 characters
+    if len(p1) >= 2:
+        s2 = p1[0:2]
+        for i in range(len(char)):
+            if char[i] == s2:
+                p1 = p1[2:]
+                binVal = bin[i]
+                return binVal, p1
+
+                # Get first 1 characters
+    if len(p1) >= 1:
+        for i in range(len(char)):
+            if char[i] == p1[0]:
+                if len(p1) > 1:
+                    p1 = p1[1:]
+                else:
+                    p1 = ''
+                binVal = bin[i]
+                return binVal, p1
+
+            # Return blank str and blank binary value if no character found
+    return '', ''
+
+# task 3
+def getFirstBin(s: str):
+    flag = s[0]
+    # short binary values
+    if flag == "0":
+        # S = 6, get first 6 values
+        binVal = s[:6]
+        s = s[6:]
+    # long binary values
+    elif flag == "1":
+        # L = 8, get first 8 values
+        binVal = s[:8]
+        s = s[8:]
+    return binVal, s
+
+
+# This function takes as input as binary value
+# and returns corresponding character for that binary value.
+def getChar(s: str, b, c):
+    i = b.index(s)
+    return c[i]
+
+
+# task 4
+
+def read_and_create(filename = "Tester.txt"):
+    with open(filename, 'r') as file:
+        CharStr = file.read()
+    BinStr = ''
+    while len(CharStr) != 0:
+        binVal, CharStr = returnBinaryValue(CharStr)
+        BinStr += binVal
+    bits = len(BinStr)
+    with open('BinOutput.txt', 'w') as output:
+        output.write(str(bits) + "." + BinStr)
+# task 5
+def bin_to_txt(filename = 'BinOutput.txt'):
+    f = open(filename, 'r')  # This opens the file and allows it to be read by the function
+    s = f.read()  # This puts the binary values within the file within a variable
+    f.close()  # This closes the file
+
+    i = s.index(".")  # This defines the index value of the period within the file
+    s = s[i + 1:]  # This redefines the variable starting from after the "
+
+    charStr = ""  # This Defines a variable as an empty string (houses chars from the acc loop)
+
+    while (s != ""):  # This says the acc loop will keep running until the var "s" is an empty str
+        binVal, s = getFirstBin(s)  # This tells the loop when to stop running
+        charStr = charStr + getChar(binVal, bin, char)  # This converts bins to chars and adds it in empty str
+
+    f = open("TextOutput.txt", "w+")  # This opens the file and allows it to be editied or writin in by the func
+    f.write(charStr)  # This writes or add the characters to the file f.close ()
+    f.close  # This Closes the file
+
+# task 6
+def identical_check(file_1= "Tester.txt", file_2: str = 'TextOutput.txt'):
+    with open(file_1, 'r') as f1, open(file_2, 'r') as f2:
+        if f1.read() == f2.read():
+            return True
+        else:
+            return False
