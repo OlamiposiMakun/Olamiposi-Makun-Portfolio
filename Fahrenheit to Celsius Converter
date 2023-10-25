@@ -1,6 +1,7 @@
 #convert.py
 #    A program to convert Fahrenheit temps to Celsius
 # By Olamiposi Makun
+#(Original Source: "Python Programming: An Introduction To Computer Science", by Zelle 3rd edition: Section 2.2) 
 
 def main():
 
