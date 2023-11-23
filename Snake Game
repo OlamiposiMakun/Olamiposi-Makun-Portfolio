@@ -2,6 +2,7 @@
 # Steps to Operate:
 # Download Pygame
 # pip install pygame or pip3 install pygame
+# Download all associated files from github || Place Files into the folder housing your ".py" code file
 # run code on chosen IDE
 
 import pygame,sys,random,asyncio
